@@ -9,4 +9,4 @@
       private: no
   tasks:
   roles:
-    - splunk_forwarder
+    - ansible-splunk-forwarder-role
