@@ -1,0 +1,50 @@
+## Configuration
+- name: Create folder directory for configuration
+  win_file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - 'C:\Program Files\SplunkUniversalForwarder\etc\system\local\'
+
+- name: Copy Splunk Forwarder (Windows)
+  copy:
+    src: splunk_uf_win.msi
+    dest: 'C:\Ansible\splunk_uf_win.msi'
+
+## Templates
+- name: Copy (Template) outputs.conf (Windows)
+  template:
+    src: outputs.conf.j2
+    dest: 'C:\Program Files\SplunkUniversalForwarder\etc\system\local\outputs.conf'
+
+- name: Copy (Template) deploymentclient.conf (Windows)
+  template:
+    src: deploymentclient.conf.j2
+    dest: 'C:\Program Files\SplunkUniversalForwarder\etc\system\local\deploymentclient.conf'
+
+- name: Copy (Template) inputs.conf (Windows)
+  template:
+    src: user-seed.conf.j2
+    dest: 'C:\Program Files\SplunkUniversalForwarder\etc\system\local\user-seed.conf'
+
+- name: Copy (Template) inputs.conf (Windows)
+  template:
+    src: inputs.conf.j2
+    dest: 'C:\Program Files\SplunkUniversalForwarder\etc\system\local\inputs.conf'
+
+## Install 
+- name: Install Splunk Forwarder (Windows)
+  win_package:
+    path: C:\Ansible\splunk_uf_win.msi
+    arguments: 'WINEVENTLOG_SEC_ENABLE=0 WINEVENTLOG_SYS_ENABLE=0 WINEVENTLOG_APP_ENABLE=0 SPLUNKPASSWORD={{ splunk_user_password }} AGREETOLICENSE=YES /quiet'
+
+- name: Start Splunk service (Windows)
+  win_service:
+    name: SplunkForwarder
+    start_mode: auto
+
+# Restart once more to ensure its currently running
+- name: Restart Splunkforwarder (Windows)
+  win_command: splunk.exe restart
+  args:
+    chdir: C:\Program Files\SplunkUniversalForwarder\bin\

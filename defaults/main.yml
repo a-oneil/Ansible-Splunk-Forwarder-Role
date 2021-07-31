@@ -1,0 +1,13 @@
+# Change these values to match your splunk enviroment
+# All these variables needs filled for this role to function
+
+splunk_server: 127.0.0.1 
+deployment_server: 127.0.0.1
+
+# Splunk Forwarder Admin
+splunk_user: 'root'
+# To generate a password, from your splunk SH instance, run the following
+# /opt/splunk/bin/splunk hash-passwd 'PASSWORD'
+hashed_user_password: '$6$T1ioVZRNSghgaI.R$ElBvENfRJtX65QrJPCEAQegusQgy3TFDs0sid8Vrm7EdrbqK1XKFyh.VXNGuaHN5.20gWDzV7CKSZrIebMxYe.'
+# Same unhashed password to start Windows Splunk Universal Forwarder
+splunk_user_password: dsfe56#hGSh2@S

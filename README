@@ -1,0 +1,6 @@
+Ansible Role to install Splunk Universal Forwarder to Windows, Debian, ARM Devices (Rpi), FreeBSD.  
+
+Instructions:  
+* Change all variables in defaults/main.yml
+* Update the Universal Forwarder packages in files to the most up to-date version
+* Run playbook-example.yml

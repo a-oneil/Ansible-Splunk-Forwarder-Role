@@ -1,0 +1,104 @@
+  # Debian
+- name: Copy Splunkforwarder (Debian)
+  copy:
+    src: splunk_uf_deb.deb
+    dest: '/root/splunk_uf_deb.deb'
+  when: ansible_os_family == 'Debian'
+
+- name: Install Splunkforwarder from deb (Debian)
+  shell: 'dpkg -i /root/splunk_uf_deb.deb'
+  when: ansible_os_family == 'Debian'
+
+- name: Remove Splunk Deb (Debian)
+  file:
+    path: '/root/splunk_uf_deb.deb'
+    state: absent
+  when: ansible_os_family == 'Debian'
+
+  ## Uncomment to setup a Rpi or FreeBSD forwarder
+  ## Add the host var endpoint_type = Pi to setup a RPI UF
+
+#   # Raspberry Pi
+# - name: Copy Splunkforwarder (Pi)
+#   copy:
+#     src: splunk_uf_arm.tgz
+#     dest: '/root/splunk_uf_arm.tgz'
+#   when: endpoint_type == 'Pi'
+
+# - name: Install Splunkforwarder (Pi)
+#   shell: 'tar -xvf /root/splunk_uf_arm.tgz && mv /root/splunkforwarder/ /opt && rm /root/splunk_uf_arm.tgz'
+#   when: endpoint_type == 'Pi'
+
+  # FreeBSD/PfSense
+# - name: Copy Splunkforwarder (FreeBSD / PfSense)
+#   copy:
+#     src: splunk_uf_freebsd.txz
+#     dest: '/root/splunk_uf_freebsd.txz'
+#   when: ansible_os_family == 'FreeBSD'
+
+# - name: Install Splunkforwarder (FreeBSD / PfSense)
+#   shell: 'cd /root && tar -xvf splunk_uf_freebsd.txz && mv opt/ / && rm /root/splunk_uf_freebsd.txz'
+#   when: ansible_os_family == 'FreeBSD'
+
+
+## Configuration
+- name: Create folder directory for configuration
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - '/opt/splunkforwarder/etc/system/local/'
+
+- name: Copy (Template) outputs.conf (Linux)
+  template:
+    src: outputs.conf.j2
+    dest: '/opt/splunkforwarder/etc/system/local/outputs.conf'
+    owner: root
+    mode: '644'
+
+- name: Copy (Template) deploymentclient.conf (Linux)
+  template:
+    src: deploymentclient.conf.j2
+    dest: '/opt/splunkforwarder/etc/system/local/deploymentclient.conf'
+    owner: root
+    mode: '644'
+
+- name: Copy (Template) user-seed.conf (Linux)
+  template:
+    src: user-seed.conf
+    dest: '/opt/splunkforwarder/etc/system/local/user-seed.conf'
+    owner: root
+    mode: '644'
+
+- name: Copy (Template) /opt/splunkforwarder/etc/system/local/inputs.conf (Linux)
+  template:
+    src: inputs.conf.j2
+    dest: '/opt/splunkforwarder/etc/system/local/inputs.conf'
+    owner: root
+    mode: '644'
+
+# Permissions
+- name: Chown Root.Root /opt/splunkforwarder/ (Linux)
+  shell: 'chmod -R 744 /opt/splunkforwarder/'
+  when: not ansible_os_family == 'FreeBSD'
+
+- name: Chown Root.Root /opt/splunkforwarder/ (Linux)
+  shell: 'chown -R root.root /opt/splunkforwarder/'
+  when: not ansible_os_family == 'FreeBSD'
+
+
+# Accept License / Start and Enable Splunkforwarder on start
+- name: Accept license and start Splunkforwarder
+  shell: '/opt/splunkforwarder/bin/splunk start --accept-license --answer-yes --auto-ports --no-prompt'
+  become: yes
+  become_user: root
+
+- name: Enable Splunkforwarder on boot
+  shell: '/opt/splunkforwarder/bin/splunk enable boot-start -user root'
+  become: yes
+  become_user: root
+
+- name: Restart Splunkforwarder
+  shell: '/opt/splunkforwarder/bin/splunk restart'
+  become: yes
+  become_user: root

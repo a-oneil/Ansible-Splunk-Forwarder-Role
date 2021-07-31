@@ -1,0 +1,6 @@
+[deployment-client]
+
+[target-broker:deploymentServer]
+targetUri = {{ deployment_server }}:8089
+clientName = {{ ansible_hostname }}
+phoneHomeIntervalInSecs = 120

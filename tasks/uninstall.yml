@@ -1,0 +1,37 @@
+- name: Stop Splunkforwarder (Windows)
+  win_command: splunk.exe stop
+  args:
+    chdir: C:\Program Files\SplunkUniversalForwarder\bin\
+  ignore_errors: yes
+  when: ansible_os_family == 'Windows'
+
+- name: Remove Splunkforwarder (Windows)
+  win_shell: 'msiexec /x C:\Ansible\splunk_uf_win.msi /quiet'
+  ignore_errors: yes
+  when: ansible_os_family == 'Windows'
+
+- name: Stop Splunkforwarder (FreeBSD / PfSense)
+  shell: '/opt/splunkforwarder/bin/splunk stop'
+  ignore_errors: yes
+  when: ( ansible_os_family == 'Debian' or endpoint_type == 'Pi' or ansible_os_family == 'FreeBSD' )
+
+- name: Remove Splunkforwarder Directory (Linux)
+  file:
+    path: '/opt/splunkforwarder/'
+    state: absent
+  ignore_errors: yes
+  when: ( ansible_os_family == 'Debian' or endpoint_type == 'Pi' )
+
+- name: Remove Splunkforwarder DPKG
+  dpkg_selections:
+    name: splunkforwarder
+    selection: purge
+  ignore_errors: yes
+  when: ( ansible_os_family == 'Debian' or endpoint_type == 'Pi' )
+
+- name: Remove Splunk Directory (FreeBSD / PfSense)
+  file:
+    path: '/opt/'
+    state: absent
+  ignore_errors: yes
+  when: ansible_os_family == 'FreeBSD'

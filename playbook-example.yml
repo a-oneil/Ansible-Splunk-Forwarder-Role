@@ -1,0 +1,12 @@
+# Playbook will ask which hosts to install on.
+# Role supports Windows, Debian, ARM (Rpi), FreeBSD
+
+- name: Install SplunkForwarder
+  hosts: "{{ hosts_prompt }}"
+  vars_prompt:
+    - name: "hosts_prompt"
+      prompt: "Enter hostname or host group to run this playbook: "
+      private: no
+  tasks:
+  roles:
+    - splunk_forwarder

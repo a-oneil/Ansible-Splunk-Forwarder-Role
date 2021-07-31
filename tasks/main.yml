@@ -1,0 +1,19 @@
+
+# Uncomment when you want to run the uninstall splunk-forwarder playbook 
+# - name: Uninstall Splunk Forwarder
+#   include_role:
+#     name: splunk_forwarder
+#     tasks_from: uninstall.yml
+
+- name: Windows Splunk UF
+  include_role:
+    name: splunk_forwarder
+    tasks_from: windows.yml
+  when: ansible_os_family == 'Windows'
+
+- name: Linux Splunk UF
+  include_role:
+    name: splunk_forwarder
+    tasks_from: linux.yml
+  when: ansible_os_family != 'Windows'
+
