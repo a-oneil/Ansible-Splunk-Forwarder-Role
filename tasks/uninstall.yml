@@ -10,10 +10,10 @@
   ignore_errors: yes
   when: ansible_os_family == 'Windows'
 
-- name: Stop Splunkforwarder (FreeBSD / PfSense)
+- name: Stop Splunkforwarder (Linux)
   shell: '/opt/splunkforwarder/bin/splunk stop'
   ignore_errors: yes
-  when: ( ansible_os_family == 'Debian' or endpoint_type == 'Pi' or ansible_os_family == 'FreeBSD' )
+  when: ansible_os_family != 'Windows'
 
 - name: Remove Splunkforwarder Directory (Linux)
   file:
