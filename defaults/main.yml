@@ -1,6 +1,6 @@
 # Change these values to match your splunk enviroment
 # All these variables needs filled for this role to function
-
+arm_architecture: 'armv6l'
 splunk_server: 127.0.0.1 
 deployment_server: 127.0.0.1
 

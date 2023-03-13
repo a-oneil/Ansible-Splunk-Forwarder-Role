@@ -23,11 +23,11 @@
 #   copy:
 #     src: splunk_uf_arm.tgz
 #     dest: '/root/splunk_uf_arm.tgz'
-#   when: endpoint_type == 'Pi'
+#   when: ansible_architecture == {{ arm_architecture }}
 
 # - name: Install Splunkforwarder (Pi)
 #   shell: 'tar -xvf /root/splunk_uf_arm.tgz && mv /root/splunkforwarder/ /opt && rm /root/splunk_uf_arm.tgz'
-#   when: endpoint_type == 'Pi'
+#   when: ansible_architecture == {{ arm_architecture }}
 
   # FreeBSD/PfSense
 # - name: Copy Splunkforwarder (FreeBSD / PfSense)

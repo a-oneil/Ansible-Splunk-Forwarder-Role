@@ -20,14 +20,14 @@
     path: '/opt/splunkforwarder/'
     state: absent
   ignore_errors: yes
-  when: ( ansible_os_family == 'Debian' or endpoint_type == 'Pi' )
+  when: ( ansible_os_family == 'Debian' or ansible_architecture == {{ arm_architecture }} )
 
 - name: Remove Splunkforwarder DPKG
   dpkg_selections:
     name: splunkforwarder
     selection: purge
   ignore_errors: yes
-  when: ( ansible_os_family == 'Debian' or endpoint_type == 'Pi' )
+  when: ( ansible_os_family == 'Debian' or ansible_architecture == {{ arm_architecture }} )
 
 - name: Remove Splunk Directory (FreeBSD / PfSense)
   file:
